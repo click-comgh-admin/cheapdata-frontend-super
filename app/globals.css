@@ -2,20 +2,265 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+::placeholder {
+  @apply text-sm font-normal;
 }
 
-@media (prefers-color-scheme: dark) {
+/* @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
   }
-}
+} */
 
-body {
+/* body {
   color: var(--foreground);
   background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+} */
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+@layer base {
+  :root {
+    /* ds for dashboard */
+
+    --ds-primary: 36 100% 48%;
+    --ds-primary-dark: 34 100% 42%;
+
+    --ds-foreground: 0 0% 0%;
+    --ds-muted-foreground: 30 2% 16%;
+
+    --primary-header: 0 0% 20%;
+
+    --ds-red: 5 77% 55%;
+    --ds-dark-red: 0 100% 40%;
+
+    --ds-yellow: 45 93% 47%;
+
+    --ds-green: 141 100% 15%;
+
+    --ds-gray: 0 0% 60%;
+    --ds-light-gray: 0 0% 85%;
+    --ds-dark-gray: 210 2% 45;
+
+    --background: 0 0% 100%;
+    --foreground: 0 0% 3.9%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 3.9%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 3.9%;
+
+    --primary: 0 0% 9%;
+    --primary-foreground: 0 0% 98%;
+
+    --secondary: 0 0% 96.1%;
+    --secondary-foreground: 0 0% 9%;
+
+    --muted: 0 0% 96.1%;
+    --muted-foreground: 0 0% 45.1%;
+
+    --accent: 0 0% 96.1%;
+    --accent-foreground: 0 0% 9%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 0 0% 89.8%;
+    --input: 0 0% 89.8%;
+    --ring: 0 0% 3.9%;
+
+    --chart-1: 12 76% 61%;
+    --chart-2: 173 58% 39%;
+    --chart-3: 197 37% 24%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
+
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 0 0% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 0 0% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 0 0% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 0 0% 9%;
+    --secondary: 0 0% 14.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 0 0% 14.9%;
+    --muted-foreground: 0 0% 63.9%;
+    --accent: 0 0% 14.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 14.9%;
+    --input: 0 0% 14.9%;
+    --ring: 0 0% 83.1%;
+    --chart-1: 220 70% 50%;
+    --chart-2: 160 60% 45%;
+    --chart-3: 30 80% 55%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%;
+  }
+}
+
+/* global presets */
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+
+  h1 {
+    @apply text-2xl font-extrabold lg:text-4xl;
+  }
+
+  h2 {
+    @apply text-3xl font-semibold;
+  }
+
+  h3 {
+    @apply text-2xl font-semibold;
+  }
+
+  h4 {
+    @apply text-xl font-semibold;
+  }
+
+  p {
+    @apply leading-7;
+  }
+
+  small {
+    @apply text-sm leading-none;
+  }
+}
+
+@layer base {
+  html,
+  body,
+  textarea {
+    scrollbar-color: theme("colors.ds-gray") transparent;
+  }
+
+  ::-webkit-scrollbar-track {
+    background-color: transparent;
+    border: 1px solid theme("colors.border");
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: theme("colors.ds-primary");
+  }
+
+  ::-webkit-scrollbar {
+    width: 2px;
+  }
+}
+
+@layer components {
+  .dashboard-grid-container {
+    display: grid;
+    grid-template-areas:
+      "sidebar header header"
+      "sidebar main main"
+      "sidebar main main";
+    grid-auto-columns: auto 1fr;
+    grid-auto-rows: auto 1fr;
+  }
+
+  .dashboard-header {
+    grid-area: header;
+  }
+
+  .dashboard-sidebar {
+    grid-area: sidebar;
+  }
+
+  .dashboard-main {
+    grid-area: main;
+  }
+}
+
+.sticky-column {
+  position: sticky;
+  left: 0;
+  z-index: 10;
+  background-color: white;
+}
+
+
+@layer utilities {
+  .min-h-dm {
+    min-height: 100vh;
+    min-height: 100dvh;
+  }
+  .max-h-dm {
+    max-height: 100vh;
+    max-height: 100dvh;
+  }
+
+  .kpi {
+    /* box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.1); */
+    border: 1px solid #e0e0e0;
+  }
+
+  .create-new-btn {
+    background: hsl(var(--ds-primary));
+    color: hsl(var(--foreground));
+    font-weight: 500;
+  }
+
+  .create-new-btn:hover {
+    background: hsl(var(--ds-primary-dark));
+  }
+
+  .submit-btn {
+    background: hsl(var(--ds-green));
+  }
+
+  .edit-btn {
+    background: hsl(var(--ds-gray));
+    color: hsl(var(--background));
+  }
+
+  .edit-btn:hover {
+    background: hsl(var(--ds-dark-gray)) !important;
+  }
+
+  .delete-btn {
+    background: hsl(var(--ds-red));
+    color: hsl(var(--background));
+  }
+
+  .delete-btn:hover {
+    background: hsl(var(--ds-dark-red)) !important;
+  }
+
+  .suspend-btn {
+    background: hsl(var(--ds-yellow));
+    color: hsl(var(--background));
+  }
+
+  .suspend-btn:hover {
+    background: hsl(var(--ds-yellow)) !important;
+  }
+
+  .archive-btn {
+    background: #006994;
+  }
+
+  .word-break-all {
+    word-break: break-all;
+    display: block;
+  }
 }
