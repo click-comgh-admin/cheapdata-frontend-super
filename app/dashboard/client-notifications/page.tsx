@@ -11,9 +11,25 @@ export default function ClientNotifications() {
   const [medium, setMedium] = useState('')
   const [message, setMessage] = useState('')
 
-  const handleSend = () => {
-    // Handle send logic here
-    console.log('Sending notification:', { medium, message })
+  const handleSend = async () => {
+    try {
+      const response = await fetch('/api/clients/notifications', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ medium, message }),
+      })
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok')
+      }
+
+      const result = await response.json()
+      console.log('Notification sent successfully:', result)
+    } catch (error) {
+      console.error('Error sending notification:', error)
+    }
   }
 
   return (
@@ -49,4 +65,3 @@ export default function ClientNotifications() {
     </div>
   )
 }
-

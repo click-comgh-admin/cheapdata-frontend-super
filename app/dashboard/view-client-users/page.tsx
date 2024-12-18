@@ -1,22 +1,36 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Table, TableBody, TableCell, TableHead, TableRow, TableHeader } from "@/components/ui/table"
 
 export default function ViewClientUsers() {
-  const [users, setUsers] = useState([
-    {
-      id: 1,
-      tradeName: 'Ashford Ventures',
-      accountId: 'afs1234',
-      applicant: 'Admin John',
-      email: 'admin.john@cheapdata.com',
-      phoneNumber: '0551234567',
-      registrationUrl: 'www.cheapdataonline.com/signup/afs1234/user'
+  interface User {
+    id: number;
+    tradeName: string;
+    accountId: string;
+    applicant: string;
+    email: string;
+    phoneNumber: string;
+    registrationUrl: string;
+  }
+
+  const [users, setUsers] = useState<User[]>([])
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const response = await fetch('/api/clients/accounts')
+        const data = await response.json()
+        setUsers(data)
+      } catch (error) {
+        console.error('Error fetching users:', error)
+      }
     }
-  ])
+
+    fetchUsers()
+  }, [])
 
   const handleEdit = (id: number) => {
     // Handle edit logic here
@@ -67,4 +81,3 @@ export default function ViewClientUsers() {
     </div>
   )
 }
-

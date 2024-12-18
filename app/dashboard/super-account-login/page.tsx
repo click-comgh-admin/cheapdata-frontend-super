@@ -8,14 +8,50 @@ import { EyeIcon, EyeOffIcon } from 'lucide-react'
 
 export default function SuperAccountLogin() {
   const [showPassword, setShowPassword] = useState(false)
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+
+
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault()
+    try {
+      const response = await fetch('/api/users/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      })
+      if (!response.ok) {
+        throw new Error('Login failed')
+      }
+      const data = await response.json()
+      // Handle successful login (e.g., redirect to dashboard, store token, etc.)
+      console.log('Login successful', data)
+      // Example: Redirect to dashboard
+      window.location.href = '/dashboard'
+    } catch (error) {
+      console.error('Error:', error)
+      // Handle login error (e.g., show error message)
+      alert('Login failed. Please check your credentials and try again.')
+    }
+  }
 
   return (
     <div className="max-w-md mx-auto mt-8">
       <h2 className="text-2xl font-semibold text-indigo-950 mb-4">Super Account Login</h2>
-      <form className="space-y-4">
+      <form className="space-y-4" onSubmit={handleSubmit}>
         <div className="space-y-2">
           <Label htmlFor="email" className="text-sm text-gray-400">Email</Label>
-          <Input id="email" type="email" placeholder="admin@cheapdata.com" required className="w-full px-3 py-2 text-sm rounded-md focus-visible:outline-none focus-visible:ring-1" />
+          <Input 
+            id="email" 
+            type="email" 
+            placeholder="admin@cheapdata.com" 
+            required 
+            className="w-full px-3 py-2 text-sm rounded-md focus-visible:outline-none focus-visible:ring-1"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
         </div>
         <div className="space-y-2">
           <Label htmlFor="password" className="text-sm text-gray-400">Password</Label>
@@ -26,6 +62,8 @@ export default function SuperAccountLogin() {
               placeholder="********" 
               required 
               className="w-full px-3 py-2 text-sm rounded-md focus-visible:outline-none focus-visible:ring-1"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
             />
             <Button
               type="button"
@@ -49,4 +87,3 @@ export default function SuperAccountLogin() {
     </div>
   )
 }
-

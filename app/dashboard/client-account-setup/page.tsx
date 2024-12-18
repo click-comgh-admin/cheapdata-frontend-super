@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -10,9 +10,42 @@ export default function ClientAccountSetupFee() {
   const [setupFee, setSetupFee] = useState('')
   const [fees, setFees] = useState([{ id: 1, fee: '500.00' }])
 
-  const handleUpdate = () => {
-    // Handle update logic here
-    console.log('Updating setup fee:', setupFee)
+  useEffect(() => {
+    // Fetch setup fees from the API
+    const fetchFees = async () => {
+      try {
+        const response = await fetch('/api/clients/setup-fee')
+        const data = await response.json()
+        setFees(data)
+      } catch (error) {
+        console.error('Error fetching setup fees:', error)
+      }
+    }
+
+    fetchFees()
+  }, [])
+
+  const handleUpdate = async () => {
+    try {
+      const response = await fetch('/api/clients/setup-fee', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ fee: setupFee }),
+      })
+
+      if (response.ok) {
+        // Update the fees state with the new fee
+        const updatedFee = await response.json()
+        setFees((prevFees) => [...prevFees, updatedFee])
+        setSetupFee('')
+      } else {
+        console.error('Error updating setup fee:', response.statusText)
+      }
+    } catch (error) {
+      console.error('Error updating setup fee:', error)
+    }
   }
 
   const handleEdit = (id: number) => {
@@ -71,4 +104,3 @@ export default function ClientAccountSetupFee() {
     </div>
   )
 }
-

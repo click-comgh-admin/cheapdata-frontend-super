@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -8,45 +8,71 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 
 export default function AddSuperAdmin() {
-  const [admins, setAdmins] = useState([
-    {
-      id: 1,
-      name: 'Admin John',
-      email: 'admin.john@cheapdata.com',
-      phoneNumber: '0551234567',
-      accessRole: 'Unlimited',
-    }
-  ])
-
-  const handleSubmit = (event: React.FormEvent) => {
-    event.preventDefault()
-    // Handle form submission logic here
+  interface Admin {
+    id: number;
+    name: string;
+    email: string;
+    phoneNumber: string;
+    accessRole: string;
   }
+
+  const [admins, setAdmins] = useState<Admin[]>([]);
+
+  useEffect(() => {
+    fetch('/api/admins')
+      .then((res) => res.json())
+      .then((data) => setAdmins(data));
+  }, []);
+
+  const handleAddAdmin = (event: React.FormEvent) => {
+    event.preventDefault();
+    const formData = new FormData(event.target as HTMLFormElement);
+    const data = Object.fromEntries(formData.entries());
+
+    fetch('/api/admins/add', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    })
+      .then(() => fetch('/api/admins').then((res) => res.json()).then(setAdmins));
+  };
 
   const handleViewActivityLogs = (id: number) => {
-    // Handle view activity logs logic here
-    console.log('Viewing activity logs for admin with id:', id)
-  }
+    fetch(`/api/admins/activity-logs/${id}`)
+      .then((res) => res.json())
+      .then((logs) => console.log('Activity logs for admin:', logs));
+  };
 
   const handleRemove = (id: number) => {
-    // Handle remove logic here
-    console.log('Removing admin with id:', id)
-  }
+    fetch(`/api/admins/remove/${id}`, {
+      method: 'DELETE',
+    })
+      .then(() => fetch('/api/admins').then((res) => res.json()).then(setAdmins));
+  };
 
   const handleEdit = (id: number) => {
-    // Handle edit logic here
-    console.log('Editing admin with id:', id)
-  }
+    const newName = prompt('Enter new name:');
+    if (!newName) return;
+
+    fetch(`/api/admins/edit/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: newName }),
+    })
+      .then(() => fetch('/api/admins').then((res) => res.json()).then(setAdmins));
+  };
 
   const handleSuspend = (id: number) => {
-    // Handle suspend logic here
-    console.log('Suspending admin with id:', id)
-  }
+    fetch(`/api/admins/suspend/${id}`, {
+      method: 'POST',
+    })
+      .then(() => fetch('/api/admins').then((res) => res.json()).then(setAdmins));
+  };
 
   return (
     <div className="space-y-8 mt-8">
       <h2 className="text-2xl font-semibold text-indigo-950 mb-4">Add Super Admin User</h2>
-      <form onSubmit={handleSubmit} className="space-y-4 max-w-md">
+      <form onSubmit={handleAddAdmin} className="space-y-4 max-w-md">
         {['userName', 'email', 'phoneNumber', 'accessRole', 'password', 'confirmPassword'].map((field) => (
           <div key={field} className="space-y-2">
             <Label htmlFor={field} className="text-sm text-gray-400">{field.charAt(0).toUpperCase() + field.slice(1).replace(/([A-Z])/g, ' $1')}</Label>
@@ -110,4 +136,3 @@ export default function AddSuperAdmin() {
     </div>
   )
 }
-

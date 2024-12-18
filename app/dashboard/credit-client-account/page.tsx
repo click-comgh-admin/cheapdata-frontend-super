@@ -8,7 +8,49 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Table, TableBody, TableCell, TableHeader, TableHead, TableRow } from "@/components/ui/table"
 
 export default function CreditClientAccount() {
-  const [searchQuery, setSearchQuery] = useState('')
+  const [formData, setFormData] = useState<{
+    tradeName: string;
+    phoneNumber: string;
+    network: string;
+    dataBundle: string;
+    amount: string;
+    reference: string;
+  }>({
+    tradeName: '',
+    phoneNumber: '',
+    network: '',
+    dataBundle: '',
+    amount: '',
+    reference: ''
+  })
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { id, value } = e.target as HTMLInputElement | HTMLSelectElement
+    setFormData(prevState => ({
+      ...prevState,
+      [id]: value as string
+    }))
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    try {
+      const response = await fetch('/api/clients/credit', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+      })
+      if (!response.ok) {
+        throw new Error('Network response was not ok')
+      }
+      const result = await response.json()
+      console.log('Success:', result)
+    } catch (error) {
+      console.error('Error:', error)
+    }
+  }
 
   return (
     <div className="space-y-8 p-4 mt-8">
@@ -16,12 +58,12 @@ export default function CreditClientAccount() {
       <div className="flex justify-end space-x-2 mt-4">
         <Button className="px-4 py-2 text-xs font-medium text-background bg-ds-primary hover:bg-ds-primary rounded-md h-9 shadow focus-visible:outline-none focus-visible:ring-1">Filter</Button>
       </div>
-      <form className="space-y-4 max-w-md">
-        {['tradeName', 'phoneNumber', 'network', 'dataBundle', 'amount', 'reference'].map((field) => (
+      <form className="space-y-4 max-w-md" onSubmit={handleSubmit}>
+        {(['tradeName', 'phoneNumber', 'network', 'dataBundle', 'amount', 'reference'] as const).map((field) => (
           <div key={field} className="space-y-2">
             <Label htmlFor={field} className="text-sm text-gray-400">{field.charAt(0).toUpperCase() + field.slice(1).replace(/([A-Z])/g, ' $1')}</Label>
             {field === 'network' || field === 'dataBundle' ? (
-              <Select>
+              <Select onValueChange={(value) => setFormData(prevState => ({ ...prevState, [field]: value }))}>
                 <SelectTrigger id={field} className="w-full px-3 py-2 text-sm rounded-md focus-visible:outline-none focus-visible:ring-1">
                   <SelectValue placeholder={`Select ${field}`} />
                 </SelectTrigger>
@@ -35,16 +77,18 @@ export default function CreditClientAccount() {
                     ))
                   }
                 </SelectContent>
-              </Select>
+                </Select>
             ) : (
               <Input 
                 id={field} 
                 placeholder={field === 'tradeName' ? 'John Doe' : field === 'phoneNumber' ? '0551234567' : field === 'amount' ? 'GHS 50' : 'Enter reference'}
                 className="w-full px-3 py-2 text-sm rounded-md focus-visible:outline-none focus-visible:ring-1"
+                value={formData[field as keyof typeof formData]}
+                onChange={handleChange}
               />
             )}
           </div>
-        ))}
+          ))}
         <div className="flex justify-end space-x-2 mt-4">
           <Button type="submit" className="px-4 py-2 text-xs font-medium text-background bg-teal-100 hover:bg-teal-100 rounded-md h-9 shadow focus-visible:outline-none focus-visible:ring-1">Credit Now</Button>
         </div>
@@ -88,4 +132,3 @@ export default function CreditClientAccount() {
     </div>
   )
 }
-
