@@ -26,12 +26,12 @@ export default function Sidebar({ isSidebarExpanded }: SidebarExpandedProps) {
     >
       <div className="grid w-full lg:grid-rows-[auto,_1fr]">
         <Link href="/" className="mx-auto block w-max">
-          <Image
+          {/* <Image
             src="/sidebar-logo.png"
             alt="logo"
             width={isSidebarExpanded ? 80 : 70}
             height={22}
-          />
+          /> */}
         </Link>
 
         <section className="overflow-y-auto overscroll-y-contain bg-[#373B4D] p-4">

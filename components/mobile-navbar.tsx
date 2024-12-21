@@ -43,7 +43,7 @@ export default function MobileNavbar({
               setIsMobileNavbarOpen(false);
             }}
           >
-            <Image src="/sidebar-logo.png" alt="logo" width={70} height={10} />
+            {/* <Image src="/sidebar-logo.png" alt="logo" width={70} height={10} /> */}
           </button>
 
           <button

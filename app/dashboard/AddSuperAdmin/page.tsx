@@ -70,7 +70,7 @@ export default function AddSuperAdmin() {
   };
 
   return (
-    <div className="space-y-8 mt-8">
+    <div className="space-y-8 mt-8 p-8">
       <h2 className="text-2xl font-semibold text-indigo-950 mb-4">Add Super Admin User</h2>
       <form onSubmit={handleAddAdmin} className="space-y-4 max-w-md">
         {['userName', 'email', 'phoneNumber', 'accessRole', 'password', 'confirmPassword'].map((field) => (

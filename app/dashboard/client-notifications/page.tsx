@@ -59,7 +59,7 @@ export default function ClientNotifications() {
           />
         </div>
         <div className="flex justify-end space-x-2 mt-4">
-          <Button type="button" onClick={handleSend} className="px-4 py-2 text-xs font-medium text-background bg-ds-primary hover:bg-ds-primary rounded-md h-9 shadow focus-visible:outline-none focus-visible:ring-1">Send</Button>
+          <Button type="button" onClick={handleSend} className="px-4 py-2 text-xs font-medium text-gray-500 bg-ds-primary hover:bg-ds-primary rounded-md h-9 shadow focus-visible:outline-none focus-visible:ring-1">Send</Button>
         </div>
       </form>
     </div>

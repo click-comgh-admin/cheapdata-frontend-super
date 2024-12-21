@@ -1,60 +1,89 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import AddSuperAdmin from "@/app/dashboard/AddSuperAdmin/page"
-import ClientAccountSetupFee from "@/app/dashboard/client-account-setup/page"
-import ClientNotifications from "@/app/dashboard/client-notifications/page"
-import CreateClientAccount from "@/app/dashboard/create-client-account/page"
-import CreditClientAccount from "@/app/dashboard/credit-client-account/page"
-import SuperAccountLogin from "@/app/dashboard/super-account-login/page"
-import ViewClientUsers from "@/app/dashboard/view-client-users/page"
+'use client'
 
-export default function SuperAccountLayout({
-  children
-}: {
-  children: React.ReactNode
-}) {
+import { useState } from 'react'
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { EyeIcon, EyeOffIcon } from 'lucide-react'
+
+export default function SuperAccountLogin() {
+  const [showPassword, setShowPassword] = useState(false)
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+
+
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault()
+    try {
+      const response = await fetch('/api/users/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      })
+      if (!response.ok) {
+        throw new Error('Login failed')
+      }
+      const data = await response.json()
+      // Handle successful login (e.g., redirect to dashboard, store token, etc.)
+      console.log('Login successful', data)
+      // Example: Redirect to dashboard
+      window.location.href = '/dashboard'
+    } catch (error) {
+      console.error('Error:', error)
+      // Handle login error (e.g., show error message)
+      alert('Login failed. Please check your credentials and try again.')
+    }
+  }
+
   return (
-    <div className="__className_4b1693 antialiased" style={{ overflow: 'hidden' }}>
-      <div className="dashboard-grid-container container p-4">
-        <h1 className="text-4xl font-semibold text-indigo-950 mb-6">CHEAPDATA Super Account</h1>
-        <Tabs defaultValue="login" className="w-full">
-          <TabsList className="grid w-full grid-cols-7 bg-ds-gray rounded-md shadow">
-            {['Login', 'Setup Fee', 'Create Account', 'View Users', 'Credit Account', 'Notifications', 'Add Admin'].map((tab) => (
-              <TabsTrigger 
-                key={tab}
-                value={tab.toLowerCase().replace(' ', '-')}
-                className="px-3 py-2 text-xs font-medium text-background bg-ds-primary hover:bg-ds-primary focus-visible:outline-none focus-visible:ring-1 rounded-md h-8"
-              >
-                {tab}
-              </TabsTrigger>
-            ))}
-          </TabsList>
-          <TabsContent value="login">
-            <SuperAccountLogin />
-          </TabsContent>
-          <TabsContent value="setup-fee">
-            <ClientAccountSetupFee />
-          </TabsContent>
-          <TabsContent value="create-account">
-            <CreateClientAccount />
-          </TabsContent>
-          <TabsContent value="view-users">
-            <ViewClientUsers />
-          </TabsContent>
-          <TabsContent value="credit-account">
-            <CreditClientAccount />
-          </TabsContent>
-          <TabsContent value="notifications">
-            <ClientNotifications />
-          </TabsContent>
-          <TabsContent value="add-admin">
-            <AddSuperAdmin />
-          </TabsContent>
-        </Tabs>
-        <div className="flex justify-end space-x-2 mt-4">
-          {children}
+    <div className="max-w-md mx-auto mt-8">
+      <h2 className="text-2xl font-semibold text-indigo-950 mb-4">CHEAPDATA Super Account Login</h2>
+      <form className="space-y-4" onSubmit={handleSubmit}>
+        <div className="space-y-2">
+          <Label htmlFor="email" className="text-sm text-gray-500">Email</Label>
+          <Input 
+            id="email" 
+            type="email" 
+            placeholder="admin@cheapdata.com" 
+            required 
+            className="w-full px-3 py-2 text-sm rounded-md focus-visible:outline-none focus-visible:ring-1"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
         </div>
-      </div>
+        <div className="space-y-2">
+          <Label htmlFor="password" className="text-sm text-gray-500">Password</Label>
+          <div className="relative">
+            <Input 
+              id="password" 
+              type={showPassword ? "text" : "password"} 
+              placeholder="********" 
+              required 
+              className="w-full px-3 py-2 text-sm rounded-md focus-visible:outline-none focus-visible:ring-1"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              className="absolute right-0 top-0 h-full px-3"
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {showPassword ? <EyeOffIcon className="h-4 w-4" /> : <EyeIcon className="h-4 w-4" />}
+            </Button>
+          </div>
+        </div>
+        <div className="flex justify-end space-x-2 mt-4">
+          <Button type="submit" className="px-4 py-2 text-xs font-medium text-gray-600 bg-ds-primary hover:bg-ds-primary rounded-md h-9 shadow focus-visible:outline-none focus-visible:ring-1">Login</Button>
+        </div>
+        <div className="flex justify-end space-x-2 mt-2">
+          <Button variant="link" className="text-xs font-medium text-ds-primary">Reset Password</Button>
+          <Button variant="link" className="text-xs font-medium text-ds-primary">Have Account? Sign Up</Button>
+        </div>
+      </form>
     </div>
   )
 }
-

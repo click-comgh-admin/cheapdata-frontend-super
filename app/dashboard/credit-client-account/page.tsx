@@ -55,9 +55,9 @@ export default function CreditClientAccount() {
   return (
     <div className="space-y-8 p-4 mt-8">
       <h2 className="text-2xl font-semibold text-indigo-950 mb-4">Credit Client Account</h2>
-      <div className="flex justify-end space-x-2 mt-4">
+      {/* <div className="flex justify-end space-x-2 mt-4">
         <Button className="px-4 py-2 text-xs font-medium text-background bg-ds-primary hover:bg-ds-primary rounded-md h-9 shadow focus-visible:outline-none focus-visible:ring-1">Filter</Button>
-      </div>
+      </div> */}
       <form className="space-y-4 max-w-md" onSubmit={handleSubmit}>
         {(['tradeName', 'phoneNumber', 'network', 'dataBundle', 'amount', 'reference'] as const).map((field) => (
           <div key={field} className="space-y-2">
@@ -90,21 +90,21 @@ export default function CreditClientAccount() {
           </div>
           ))}
         <div className="flex justify-end space-x-2 mt-4">
-          <Button type="submit" className="px-4 py-2 text-xs font-medium text-background bg-teal-100 hover:bg-teal-100 rounded-md h-9 shadow focus-visible:outline-none focus-visible:ring-1">Credit Now</Button>
+          <Button type="submit" className="px-4 py-2 text-xs font-medium text-background bg-teal-300 hover:bg-teal-300 rounded-md h-9 shadow focus-visible:outline-none focus-visible:ring-1">Credit Now</Button>
         </div>
       </form>
 
       <div className="mt-8">
         <h3 className="text-xl font-semibold text-indigo-950 mb-4">View Client Data Orders</h3>
-        <div className="flex space-x-4 mb-4">
+        <div className="flex space-x-2 mb-4">
           <Input type="date" placeholder="Start Date" className="px-3 py-2 text-sm rounded-md focus-visible:outline-none focus-visible:ring-1" />
           <Input type="date" placeholder="End Date" className="px-3 py-2 text-sm rounded-md focus-visible:outline-none focus-visible:ring-1" />
           <Input placeholder="Search by Client Number/Order ID/Trade Name" className="px-3 py-2 text-sm rounded-md focus-visible:outline-none focus-visible:ring-1" />
-          <div className="flex justify-end space-x-2 mb-4">
-            <Button className="px-3 py-2 text-xs font-medium text-background bg-ds-primary hover:bg-ds-primary rounded-md h-9 shadow focus-visible:outline-none focus-visible:ring-1">Download CSV</Button>
-          </div>
         </div>
         <div className="overflow-x-auto">
+        <div className="flex justify-end space-x-2 mb-4">
+            <Button className="px-3 py-2 text-xs font-medium text-gray-500 bg-ds-primary hover:bg-ds-primary rounded-md h-9 shadow focus-visible:outline-none focus-visible:ring-1">Download CSV</Button>
+          </div>
           <Table className="w-full">
             <TableHeader className="bg-[#212D40]">
               <TableRow>
